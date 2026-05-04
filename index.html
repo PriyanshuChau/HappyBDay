@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Happy Birthday ❤️</title>
+
+<style>
+    /* Reset default browser styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+/* Background + prevent horizontal scroll */
+body {
+    background: linear-gradient(135deg, #ffe4ec, #ffd6e7);
+    overflow-x: hidden;
+
+}
+
+/* Each page takes full screen */
+.page {
+    min-height: 100vh;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    text-align: center;
+    padding: 20px;
+}
+
+/* Responsive heading */
+h1 {
+    font-size: clamp(1.8rem, 5vw, 2.8rem);
+    color: #ff2e75;
+}
+
+/* Paragraph styling */
+p {
+    margin-top: 15px;
+    max-width: 90%;
+    font-size: clamp(1rem, 3.5vw, 1.2rem);
+}
+
+button {
+    margin-top: 20px;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 25px;
+    background: #d6004c;
+    color: white;
+    cursor: pointer;
+    font-size: clamp(0.9rem, 3vw, 1rem);
+}
+
+/* Slideshow */
+
+.slideshow {
+    width: 90%;
+    max-width: 300px;
+    height: 60vw;
+    max-height: 350px;
+    border-radius: 20px;
+    overflow: hidden;
+    margin-top: 20px;
+}
+.slideshow img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Typing */
+#typing {
+    border-right: none;
+}
+
+/* Navigation */
+.hidden {
+    display: none;
+}
+
+/* Fireworks */
+canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+    z-index: -1;    /* behind everything */
+}
+
+/* MOBILE MEDIA QUERY */
+@media (max-width: 480px) {
+    h1 {
+        font-size: 1.8rem;
+    }
+
+    p {
+        font-size: 0.95rem;
+    }
+
+    button {
+        width: 100%;
+        max-width: 250px;
+    }
+
+    .slideshow {
+        height: 100vw;
+    }
+}
+</style>
+</head>
+
+<body style="color:#333;">
+
+<!-- 🎵 Background music -->
+<canvas id="fireworks"></canvas>
+
+<!-- 🎵 Background music -->
+<audio id="music" loop>
+    <!-- 🔁 Replace this with HER favorite song -->
+    <source src="dooron-dooron-official-video-paresh-pahu-media-lv-wioho40q-009-128k_z5OSSwx8.mp3" type="audio/mp3">
+</audio>
+
+<!-- PAGE 1 -->
+<div class="page" id="page1">
+    <h1>Happy Birthday SHIVANI ❤️</h1>
+    <p>The one who turned my ordinary life into something magical 💖</p>
+    <button onclick="nextPage(2)">Start 💫</button>
+</div>
+
+<!-- PAGE 2 -->
+<div class="page hidden" id="page2">
+    <h1>Why You Are So Special 💕</h1>
+    <p>
+        You are my happiness, my peace, and my favorite person.
+        Even when we fight, I still choose you every time ❤️  
+    </p>
+    <button onclick="nextPage(3)">Next ➡️</button>
+</div>
+
+<!-- PAGE 3 (SLIDESHOW) -->
+<div class="page hidden" id="page3">
+    <h1>Our Memories 📸</h1>
+
+    <div class="slideshow">
+        <img id="slide" src="1st.jpeg" >
+    </div>
+
+    <p>Every moment with you = best memory ❤️</p>
+
+    <button onclick="nextPage(4)">Next ➡️</button>
+</div>
+
+<!-- PAGE 4 (TYPING EFFECT) -->
+<div class="page hidden" id="page4">
+    <h1>Something From My Heart 💌</h1>
+    <p id="typing"></p>
+    <button onclick="nextPage(5)">Next ➡️</button>
+</div>
+
+<!-- PAGE 5 (INSIDE JOKE / PERSONAL) -->
+<div class="page hidden" id="page5">
+    <h1>Our Crazy Moments 😂</h1>
+    <p>
+        Remember that time when we enjoyed and laughed so much on 16th Feb?  
+        That’s when I knew… How happy i can be if i'm with you... Becaue so much was happend in that month...
+        So I never want to lose you ❤️  
+    </p>
+    <button onclick="nextPage(6)">Final 🎁</button>
+</div>
+
+<!-- PAGE 6 (FINAL + FIREWORKS) -->
+<div class="page hidden" id="page6">
+    <h1>I Love You ❤️</h1>
+    <p>Happy Birthday once again My Baby Girl💖</p>
+</div>
+
+<script>
+
+/* Music */
+
+const music = document.getElementById("music");
+
+function startMusic() {
+    music.volume = 0;
+    music.play().catch(() => {}); // prevents error
+
+    let vol = 0;
+    const fade = setInterval(() => {
+        if (vol < 1) {
+            vol += 0.05;
+            music.volume = vol;
+        } else {
+            clearInterval(fade);
+        }
+    }, 200);
+}
+
+document.addEventListener("click", function () {
+    startMusic();
+}, { once: true });
+
+function startExperience() {
+    playMusic();      // 🎵 start music
+    nextPage(2);      // your existing function
+}
+
+/* PAGE NAVIGATION */
+
+function nextPage(page) {
+    document.querySelectorAll(".page").forEach(p => p.classList.add("hidden"));
+    document.getElementById("page" + page).classList.remove("hidden");
+
+    if (page === 4) {
+        startTypingEffect();
+    }
+
+    // 💥 BIG BURST when entering last page
+    if (page === 6) {
+        for (let i = 0; i < 5; i++) {
+            explode(
+                Math.random() * canvas.width,
+                Math.random() * 300,
+                colors[Math.floor(Math.random() * colors.length)]
+            );
+        }
+    }
+}
+
+/* SLIDESHOW */
+
+const images = [
+ "1st.jpeg",
+ "2nd.jpeg",
+ "3rd.jpeg",
+ "4th.jpeg",
+ "5th.jpeg",
+ "6th.jpeg",
+ "7th.jpeg",
+ "8th.jpeg",
+ "9th.jpeg",
+ "10th.jpeg",
+ "11th.jpeg",
+ "12th.jpeg",
+];
+let index = 0;
+
+setInterval(() => {
+    index = (index + 1) % images.length;
+    document.getElementById("slide").src = images[index];
+}, 2000);
+
+/* TYPING EFFECT */
+
+const text = `I dont just love you… I feel lucky every single day that you are in my life. 
+Out of everyone in this world, I found you, and that means more to me than I can ever explain. 
+You came into my life and slowly became the most important part of it.
+
+You are not just my love… you are my happiness, my peace, and the person who makes everything feel better. 
+When i talk to you, i feel calm. When i think about you, i smile without even trying. 
+Even on my worst days, you somehow make things feel okay.
+
+With you, even small moments feel special. 
+A simple chat, a call, or even just knowing you are there for me makes my whole day better. 
+You dont even realize how much you mean to me, but honestly, you mean everything.
+
+And the best part is… even when we fight, even when we dont understand each other, my heart still chooses you. 
+Every single time. Because no matter what happens, I know I dont want anyone else. Its always you.
+
+You understand me in a way no one else does. You stay with me even when Im not perfect, and that is something I truly value. 
+I may not always say it properly, but I really appreciate you, your care, your time, and everything you do for me.
+
+I dont just love you… I respect you, I care for you, and I want to be with you through everything — good days and bad days. 
+I want to support you, stand with you, and never let you feel alone.
+
+You are not just someone special in my life… you are my person, my peace, and my everything. 
+And no matter what happens, I will always choose you ❤️`;
+let i = 0;
+
+
+function startTypingEffect() {
+    i = 0;
+    document.getElementById("typing").innerHTML = "";
+    type();
+}
+
+function type() {
+    if (i < text.length) {
+        document.getElementById("typing").innerHTML += text.charAt(i);
+        i++;
+        setTimeout(type, 40); // smoother typing
+    }
+}
+
+/* =========================
+   💥 INSANE FIREWORKS
+========================= */
+
+const canvas = document.getElementById("fireworks");
+const ctx = canvas.getContext("2d");
+
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+window.addEventListener("resize", () => {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+});
+
+function random(min, max) {
+    return Math.random() * (max - min) + min;
+}
+
+const colors = ["#ff2e75", "#ff6ec7", "#ffd166", "#06d6a0", "#118ab2"];
+
+/* 🎇 FIREWORK ROCKET */
+class Firework {
+    constructor() {
+        this.x = random(100, canvas.width - 100);
+        this.y = canvas.height;
+        this.targetY = random(100, 300);
+        this.color = colors[Math.floor(Math.random() * colors.length)];
+    }
+
+    update() {
+        this.y -= 6;
+
+        if (this.y <= this.targetY) {
+            explode(this.x, this.y, this.color);
+            fireworks.splice(fireworks.indexOf(this), 1);
+        }
+    }
+
+    draw() {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, 3, 0, Math.PI * 2);
+        ctx.fillStyle = this.color;
+        ctx.fill();
+    }
+}
+
+/* 💥 PARTICLES */
+class Particle {
+    constructor(x, y, color, angle, speed, isHeart = false) {
+        this.x = x;
+        this.y = y;
+        this.color = color;
+        this.life = 100;
+
+        if (isHeart) {
+            // 💖 heart shape formula
+            this.dx = 16 * Math.pow(Math.sin(angle), 3);
+            this.dy = -(13 * Math.cos(angle) - 5 * Math.cos(2 * angle) - 2 * Math.cos(3 * angle) - Math.cos(4 * angle));
+        } else {
+            this.dx = Math.cos(angle) * speed;
+            this.dy = Math.sin(angle) * speed;
+        }
+    }
+
+    update() {
+        this.x += this.dx * 0.3;
+        this.y += this.dy * 0.3;
+        this.life--;
+    }
+
+    draw() {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, 2.5, 0, Math.PI * 2);
+        ctx.fillStyle = this.color;
+        ctx.shadowBlur = 10;
+        ctx.shadowColor = this.color;
+        ctx.fill();
+    }
+}
+
+/* 💥 EXPLOSION FUNCTION */
+function explode(x, y, color) {
+    const isHeart = Math.random() < 0.3; // 30% chance heart
+
+    for (let i = 0; i < 100; i++) {
+        const angle = (Math.PI * 2 * i) / 100;
+        const speed = random(2, 6);
+        particles.push(new Particle(x, y, color, angle, speed, isHeart));
+    }
+}
+
+let fireworks = [];
+let particles = [];
+
+/* 🎬 ANIMATION LOOP */
+function animate() {
+    ctx.fillStyle = "rgba(255, 228, 236, 0.2)";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    const page6 = document.getElementById("page6");
+
+    // ONLY on final page
+    if (!page6.classList.contains("hidden")) {
+
+        // continuous fireworks
+        if (Math.random() < 0.1) {
+            fireworks.push(new Firework());
+        }
+
+        fireworks.forEach(f => {
+            f.update();
+            f.draw();
+        });
+
+        particles.forEach((p, i) => {
+            p.update();
+            p.draw();
+            if (p.life <= 0) particles.splice(i, 1);
+        });
+    }
+
+    requestAnimationFrame(animate);
+}
+
+animate();
+</script>
+
+</body>
+</html>
